@@ -1,13 +1,14 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+// src/server.js
+import express, { Express, Request, Response } from "express";
+import cors from "cors";
 import echoRouter from './routes/echo';
 import connectDB from './mongodb/connect';
-import * as dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 // Load environment variables from .env file
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 
 app.use(express.json());
 app.use(cors());
@@ -15,8 +16,8 @@ app.use(cors());
 // Include the echo API
 app.use('/echo', echoRouter);
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript Express!');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello, TypeScript Express!");
 });
 
 const startServer = async () => {
