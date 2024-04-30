@@ -1,9 +1,13 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+// src/server.js
+import express, { Express, Request, Response } from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 import echoRouter from './routes/echo';
 
-const app = express();
-const port = process.env.PORT || 3000;
+dotenv.config();
+
+const app: Express = express();
+const port = process.env.PORT || 5000;
 
 app.use(express.json()); // Add this line to enable JSON parsing in the request body
 app.use(cors());
@@ -11,10 +15,10 @@ app.use(cors());
 // Include the echo API
 app.use('/echo', echoRouter);
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript Express!');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello, TypeScript Express!");
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
