@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import PromptModel from "../mongodb/models/prompt";
 
 export const promptCreate = async (text: string) => {
@@ -9,4 +10,8 @@ export const promptCreate = async (text: string) => {
         message: ""
     });
     return newPrompt._id;
+}
+
+export const promptReplaceText = async (id: ObjectId, updated: string) => {
+    return PromptModel.findByIdAndUpdate(id, { patternKey: updated }, { new: true });
 }
