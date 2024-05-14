@@ -3,7 +3,7 @@ import PromptModel from "../mongodb/models/prompt";
 
 export const promptCreate = async (text: string) => {
     const existingPrompt = await PromptModel.findOne({ text });
-    if (existingPrompt) return existingPrompt._id;
+    if (existingPrompt) return null;
 
     const newPrompt = await PromptModel.create({
         patternKey: text,

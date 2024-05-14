@@ -6,6 +6,7 @@ const router = Router();
 router.post('/create/v1', (req: Request, res: Response) => {
     const { promptText } = req.body;
     const promptId = promptCreate(promptText);
+    if (promptId == null) return res.status(500).json({ message: "Prompt already exists" });
     return res.status(200).json(promptId);
 });
 
