@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { ObjectId } from "mongoose";
 import PromptModel from "../mongodb/models/prompt";
 
 export const promptCreate = async (req: Request, res: Response) => {
@@ -15,9 +14,22 @@ export const promptCreate = async (req: Request, res: Response) => {
         "message": answerText
     });
 
-    res.status(200).json({"promptId": newPrompt._id});
+    res.status(200).json({ "promptId": newPrompt._id });
 }
 
-export const promptReplaceText = async (id: ObjectId, updated: string) => {
-    return PromptModel.findByIdAndUpdate(id, { patternKey: updated }, { new: true });
+export const promptReplaceText = async (req: Request, res: Response) => {
+    const { promptId, newText } = req.body;
+    const existingPrompt = await PromptModel.findOne({ "_id": promptId });
+    if (!existingPrompt) {
+        res.status(500).json({ message: "Prompt does not exist" });
+        return;
+    }
+    const matchingPrompt = await PromptModel.findOne({ "patternKey": newText });
+    if (matchingPrompt) {
+        res.status(500).json({ message: "Prompt with this text already exists" });
+        return;
+    }
+
+    const result = PromptModel.updateOne({ "_id": promptId }, { "patternKey": newText });
+    res.status(200).json((await result).modifiedCount);
 }
