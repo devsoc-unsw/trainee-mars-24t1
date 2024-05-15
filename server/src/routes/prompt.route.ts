@@ -3,12 +3,7 @@ import { promptCreate, promptReplaceText } from '../controllers/prompt.controlle
 
 const router = Router();
 
-router.post('/create/v1', (req: Request, res: Response) => {
-    const { promptText } = req.body;
-    const promptId = promptCreate(promptText);
-    if (promptId == null) return res.status(500).json({ message: "Prompt already exists" });
-    return res.status(200).json(promptId);
-});
+router.route('/create/v1').post(promptCreate);
 
 router.put('/edit/v1', (req: Request, res: Response) => {
     const { promptId, newText } = req.body;

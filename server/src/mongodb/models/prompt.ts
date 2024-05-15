@@ -10,6 +10,8 @@ const promptSchema: Schema = new mongoose.Schema({
   message: { type: String, required: true },
 });
 
+mongoose.Schema.Types.String.checkRequired(v => v != null);
+
 const PromptModel: Model<IPrompt> = mongoose.model<IPrompt>('Prompt', promptSchema);
 
 export default PromptModel;
