@@ -1,9 +1,10 @@
 import { Router } from 'express';
-import { promptCreate, promptReplaceText } from '../controllers/prompt.controller';
+import { promptCreate, promptReplaceText, promptList } from '../controllers/prompt.controller';
 
 const router = Router();
 
 router.route('/create/v1').post(promptCreate);
 router.route('/edit/v1').put(promptReplaceText);
+router.route('/list/:userId/v1').get(promptList);
 
 export default router;

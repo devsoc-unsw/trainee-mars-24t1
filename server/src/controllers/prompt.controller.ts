@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import PromptModel from "../mongodb/models/prompt";
+import UserModel from '../mongodb/models/user';
 
 export const promptCreate = async (req: Request, res: Response) => {
     const { promptText, answerText } = req.body;
@@ -40,6 +41,25 @@ export const promptReplaceText = async (req: Request, res: Response) => {
 
         const result = PromptModel.updateOne({ "_id": promptId }, { "patternKey": newText });
         res.status(200).json((await result).modifiedCount);
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: "unknown" });
+        }
+    }
+}
+
+export const promptList = async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    try {
+        const user = await UserModel.findById(userId).populate("prompts");
+        if (!user) {
+            res.status(400).json({ message: "User does not exist" });
+            return;
+        }
+
+        res.status(200).json(user.prompts);
     } catch (error) {
         if (error instanceof Error) {
             res.status(500).json({ message: error.message });
