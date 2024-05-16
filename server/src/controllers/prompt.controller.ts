@@ -51,7 +51,7 @@ export const promptReplaceText = async (req: Request, res: Response) => {
 }
 
 export const promptList = async (req: Request, res: Response) => {
-    const userId = req.params.userId;
+    const { userId } = req.body;
     try {
         const user = await UserModel.findById(userId).populate("prompts");
         if (!user) {
