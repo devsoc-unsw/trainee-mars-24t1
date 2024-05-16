@@ -6,7 +6,7 @@ export const answerReplaceText = async (req: Request, res: Response) => {
     try {
         const existingPrompt = await PromptModel.findOne({ "_id": promptId });
         if (!existingPrompt) {
-            res.status(500).json({ message: "Prompt does not exist" });
+            res.status(400).json({ message: "Prompt does not exist" });
             return;
         }
         const result = PromptModel.updateOne({ "_id": promptId }, { "message": newText });

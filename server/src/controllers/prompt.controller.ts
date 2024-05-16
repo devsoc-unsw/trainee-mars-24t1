@@ -6,7 +6,7 @@ export const promptCreate = async (req: Request, res: Response) => {
     try {
         const existingPrompt = await PromptModel.findOne({ "patternKey": promptText });
         if (existingPrompt) {
-            res.status(500).json({ message: "Prompt already exists" });
+            res.status(400).json({ message: "Prompt already exists" });
             return;
         }
 
@@ -29,12 +29,12 @@ export const promptReplaceText = async (req: Request, res: Response) => {
     try {
         const existingPrompt = await PromptModel.findOne({ "_id": promptId });
         if (!existingPrompt) {
-            res.status(500).json({ message: "Prompt does not exist" });
+            res.status(400).json({ message: "Prompt does not exist" });
             return;
         }
         const matchingPrompt = await PromptModel.findOne({ "patternKey": newText });
         if (matchingPrompt) {
-            res.status(500).json({ message: "Prompt with this text already exists" });
+            res.status(400).json({ message: "Prompt with this text already exists" });
             return;
         }
 
