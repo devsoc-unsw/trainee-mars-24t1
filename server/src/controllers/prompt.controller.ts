@@ -48,3 +48,23 @@ export const promptReplaceText = async (req: Request, res: Response) => {
         }
     }
 }
+
+export const promptDelete = async (req: Request, res: Response) => {
+    const { promptId } = req.body;
+    try {
+        const existingPrompt = await PromptModel.findOne({ "_id": promptId });
+        if (!existingPrompt) {
+            res.status(400).json({ message: "Prompt does not exist" });
+            return;
+        }
+
+        const result = PromptModel.deleteOne({ "_id": promptId });
+        res.status(200).json((await result).deletedCount);
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: "unknown" });
+        }
+    }
+}
