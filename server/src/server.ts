@@ -4,6 +4,8 @@ import cors from "cors";
 import echoRouter from './routes/echo';
 import connectDB from './mongodb/connect';
 import dotenv from "dotenv";
+import promptRouter from './routes/prompt.route';
+import answerRouter from './routes/answer.route';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -15,6 +17,8 @@ app.use(cors());
 
 // Include the echo API
 app.use('/echo', echoRouter);
+app.use('/prompt', promptRouter);
+app.use('/answer', answerRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, TypeScript Express!");
