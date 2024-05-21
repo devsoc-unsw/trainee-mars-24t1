@@ -8,8 +8,6 @@ export const userCreate = async (req: Request, res: Response) => {
     try {
         const userFound = await UserModel.findOne({"email": email});
 
-        console.log(userFound)
-
         if (userFound) return res.status(200).json(userFound._id)
 
         const newUser = await UserModel.create({
@@ -25,10 +23,10 @@ export const userCreate = async (req: Request, res: Response) => {
 
 // delete user
 export const userDelete = async (req: Request, res: Response) => {
-    const email = req.body;
+    const { email } = req.body;
     
     try {
-        const userFound = await UserModel.findOne({email});
+        const userFound = await UserModel.findOne({"email": email});
 
         if (!userFound) throw new Error("User not found!");
 
@@ -47,7 +45,7 @@ export const userGet = async (req: Request, res: Response) => {
     try {
         const id = parseInt(req.params.id);
 
-        const userFound = await UserModel.findOne({_id: id}).populate("allProperties");
+        const userFound = await UserModel.findOne({"_id": id}).populate("allProperties");
 
         if (!userFound) throw new Error("User not found!");
 
