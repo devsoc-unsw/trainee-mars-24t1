@@ -64,6 +64,10 @@ export const promptList = async (req: Request, res: Response) => {
     const { userId } = req.body;
     try {
         const user = await UserModel.findById(userId).populate("prompts");
+        if (!user) {
+            res.status(400).json({ message: "User does not exist" });
+            return;
+        }
         res.status(200).json(user.prompts);
     } catch (error) {
         if (error instanceof Error) {
