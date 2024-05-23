@@ -1,7 +1,6 @@
 // src/server.js
 import express, { Express, Request, Response } from "express";
 import cors from "cors";
-import echoRouter from './routes/echo';
 import connectDB from './mongodb/connect';
 import dotenv from "dotenv";
 import promptRouter from './routes/prompt.route';
@@ -16,8 +15,6 @@ const app: Express = express();
 app.use(express.json());
 app.use(cors());
 
-// Include the echo API
-app.use('/echo', echoRouter);
 app.use('/prompt', promptRouter);
 app.use('/answer', answerRouter);
 app.use('/user', userRouter);

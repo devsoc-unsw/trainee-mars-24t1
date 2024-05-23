@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import PromptModel from "../mongodb/models/prompt";
-import UserModel from "../mongodb/models/user";
+import UserModel from '../mongodb/models/user';
 import mongoose from 'mongoose';
 
 export const promptCreate = async (req: Request, res: Response) => {
@@ -60,6 +60,24 @@ export const promptReplaceText = async (req: Request, res: Response) => {
     }
 }
 
+export const promptList = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+    try {
+        const user = await UserModel.findById(userId).populate("prompts");
+        if (!user) {
+            res.status(400).json({ message: "User does not exist" });
+            return;
+        }
+        res.status(200).json(user.prompts);
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: "unknown" });
+        }
+    }
+}
+
 export const promptDelete = async (req: Request, res: Response) => {
     const { userId, promptId } = req.body;
     try {
@@ -68,6 +86,7 @@ export const promptDelete = async (req: Request, res: Response) => {
             res.status(400).json({ message: "User does not exist" });
             return;
         }
+
         if (!(await userHasPromptById(userId, promptId))) {
             res.status(400).json({ message: "Prompt does not exist" });
             return;
@@ -87,19 +106,19 @@ export const promptDelete = async (req: Request, res: Response) => {
     }
 }
 
-export const userHasPromptById = async (userId: String, promptId: mongoose.Types.ObjectId) => {
+export const userHasPromptById = async (userId: string, promptId: mongoose.Types.ObjectId) => {
     const user = await UserModel.findById(userId);
     if (!user) return false;
-    for (let id of user.prompts) {
+    for (const id of user.prompts) {
         if (id == promptId) return true;
     }
     return false;
 }
 
-const userHasPromptByText = async (userId: String, promptText: string) => {
+const userHasPromptByText = async (userId: string, promptText: string) => {
     const user = await UserModel.findById(userId);
     if (!user) return false;
-    for (let promptId of user.prompts) {
+    for (const promptId of user.prompts) {
         const promptObj = await PromptModel.findById(promptId);
         if (promptObj?.patternKey.localeCompare(promptText) == 0) {
             return true;
