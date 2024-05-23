@@ -5,6 +5,7 @@ import connectDB from './mongodb/connect';
 import dotenv from "dotenv";
 import promptRouter from './routes/prompt.route';
 import answerRouter from './routes/answer.route';
+import userRouter from './routes/user.route';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(cors());
 
 app.use('/prompt', promptRouter);
 app.use('/answer', answerRouter);
+app.use('/user', userRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello, TypeScript Express!");
@@ -26,7 +28,7 @@ const startServer = async () => {
         const mongodbUrl = process.env.MONGODB_URL || '';
         connectDB(mongodbUrl);
 
-        const port = process.env.PORT || 5000;
+        const port = process.env.PORT || 5001;
         app.listen(port, () => console.log(`Server started on port ${port}`));
     } catch (error) {
         console.log(error);
