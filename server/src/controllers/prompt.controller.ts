@@ -106,19 +106,19 @@ export const promptDelete = async (req: Request, res: Response) => {
     }
 }
 
-export const userHasPromptById = async (userId: String, promptId: mongoose.Types.ObjectId) => {
+export const userHasPromptById = async (userId: string, promptId: mongoose.Types.ObjectId) => {
     const user = await UserModel.findById(userId);
     if (!user) return false;
-    for (let id of user.prompts) {
+    for (const id of user.prompts) {
         if (id == promptId) return true;
     }
     return false;
 }
 
-const userHasPromptByText = async (userId: String, promptText: string) => {
+const userHasPromptByText = async (userId: string, promptText: string) => {
     const user = await UserModel.findById(userId);
     if (!user) return false;
-    for (let promptId of user.prompts) {
+    for (const promptId of user.prompts) {
         const promptObj = await PromptModel.findById(promptId);
         if (promptObj?.patternKey.localeCompare(promptText) == 0) {
             return true;
