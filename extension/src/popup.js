@@ -4,5 +4,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function useResponse() {
-    console.log("button clicked!");
+    document.getElementById("response").innerHTML = "button clicked!";
 }

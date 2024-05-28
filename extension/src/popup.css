@@ -30,6 +30,10 @@ html {
     overflow-y: auto;
 }
 
+#response {
+    background-color: white;
+}
+
 .button1 {
     background-color: #fe6a01;
     color: white;
