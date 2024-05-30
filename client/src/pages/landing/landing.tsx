@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import '../../App.css';
-import marsImage from '../../marsWhite.png';
-import { jwtDecode } from 'jwt-decode';
+import { useState } from "react";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import "../../App.css";
+import marsImage from "../../marsWhite.png";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const LandingPage = () => {
   const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleGetStartedClick = () => {
     setShowGoogleSignIn(true);
@@ -15,12 +17,11 @@ const LandingPage = () => {
     try {
       const decoded = jwtDecode(credentialResponse?.credential ?? "");
       console.log(decoded);
-      // navigate('/login'); // Optional: Navigate after successful login
+      navigate("/home"); // Navigate to /home after successful login
     } catch (err) {
       console.error("Error decoding JWT:", err);
     }
   };
-
 
   const handleGoogleError = () => {
     console.log("Login failed");
@@ -40,13 +41,16 @@ const LandingPage = () => {
             onError={handleGoogleError}
           />
         ) : (
-          <button onClick={handleGetStartedClick} className="get-started-button">
+          <button
+            onClick={handleGetStartedClick}
+            className="get-started-button"
+          >
             Get Started
           </button>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default LandingPage;
