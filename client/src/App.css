@@ -1,42 +1,70 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* .App {
   text-align: center;
+} */
+
+.App-logo {
+  height: 60vmin;
+  pointer-events: none;
+  /* padding-left:300px; */
+  /* size:200; */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.mars-container {
+  background-color: #FED0AC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.text-section {
+  flex: 1;
+  padding: 20px;
+  text-align: left;
+  color:#707070
 }
 
-.card {
-  padding: 2em;
+.text-section h1 {
+  /* font-size: 3em; */
+  margin: 0;
+  /* padding: 10px;  */
+  
+  font-family: 'Roboto', sans-serif; /* Roboto font */
+  font-weight: bold;
+
+  color: white; /* White fill */
+  font-size: 52px; /* Large font size */
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #FE6A01;
+
 }
 
-.read-the-docs {
-  color: #888;
+.text-section p {
+  font-size: 1.5em;
+  margin: 10px 0 20px;
+}
+
+.get-started-button {
+  background-color: #FE6A01;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.get-started-button:hover {
+  background-color: #e39555;
 }
