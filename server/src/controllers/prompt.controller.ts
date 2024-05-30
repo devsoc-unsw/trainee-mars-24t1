@@ -126,3 +126,29 @@ const userHasPromptByText = async (userId: string, promptText: string) => {
     }
     return false;
 }
+
+export const promptGetAnswer = async (req: Request, res: Response) => {
+    const userId = req.query.userId as string;
+    const promptText = req.query.promptText as string;
+    try {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            res.status(400).json({ message: "User does not exist" });
+            return;
+        }
+        for (const promptId of user.prompts) {
+            const promptObj = await PromptModel.findById(promptId);
+            if (promptObj?.patternKey.localeCompare(promptText) == 0) {
+                res.status(200).json(promptObj.message);
+                return;
+            }
+        }
+        res.status(400).json({ message: "Prompt does not exist" });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.status(500).json({ message: error.message });
+        } else {
+            res.status(500).json({ message: "unknown" });
+        }
+    }
+}
