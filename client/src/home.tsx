@@ -1,33 +1,46 @@
 import React, { useState } from 'react';
-import './App.css'
-import Logo from './assets/marsWhite.png'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import './App.css';
+import Logo from './assets/marsWhite.png';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const HomePage = () => {
-  const [selectedOption, setSelectedOption] = useState('');
+  const [options, setOptions] = useState([
+    { id: 1, text: 'Question 1', content: 'This is the content for Question 1' },
+  ]);
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newQuestionText, setNewQuestionText] = useState('');
 
   const handleOptionClick = (option: any) => {
     setSelectedOption(option);
+    setIsEditing(false);
   };
 
-  const options = [
-    { id: 1, text: 'Option 1', content: 'This is the content for Option 1' },
-    { id: 2, text: 'Option 2', content: 'This is the content for Option 2' },
-    { id: 3, text: 'Option 3', content: 'This is the content for Option 3' },
-    // Add more options as needed
-  ];
+  const handleAddQuestion = () => {
+    const newQuestion = {
+      id: options.length + 1,
+      text: `Question ${options.length + 1}`,
+      content: `This is the content for Question ${options.length + 1}`,
+    };
+    setOptions([...options, newQuestion]);
+  };
+
+  const handleEditContent = (event: any) => {
+    setSelectedOption({ ...selectedOption, content: event.target.value });
+    setOptions(options.map(opt => opt.id === selectedOption.id ? { ...opt, content: event.target.value } : opt));
+  };
 
   return (
     <main className='bg-white flex flex-col h-screen'>
-      <div className='fixed w-full h-auto top-0 flex items-center justify-between p-10'>
-        <div className='flex items-center gap-8'>
-          <img src={Logo} alt="Logo" className='h-32 w-auto' />
-          <p className='poetsen-one-regular text-5xl text-[#FE6A01]'>MARS</p>
+      <div className='fixed w-full h-auto top-0 flex items-center justify-between p-6 bg-white shadow-md z-10'>
+        <div className='flex items-center gap-4'>
+          <img src={Logo} alt="Logo" className='h-16 w-auto' />
+          <p className='poetsen-one-regular text-3xl text-[#FE6A01]'>MARS</p>
         </div>
 
-        <div className='flex items-center gap-8'>
-          <p>Hellen</p>
+        <div className='flex items-center gap-4'>
+          <p>Your Name</p>
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
@@ -35,14 +48,18 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className='flex w-full h-full pt-40'>
-        <div className='w-1/3 h-full p-10 overflow-y-auto'>
-          <ScrollArea className="h-full rounded-md border p-4">
+      <div className='flex w-full h-full pt-32'>
+        <div className='w-1/3 h-full p-6 overflow-y-auto border-r'>
+          <div className='flex items-center justify-between mb-4'>
+            <p className='text-xl font-semibold'>Questions</p>
+            <button className='text-xl text-[#FE6A01]' onClick={handleAddQuestion}>+</button>
+          </div>
+          <ScrollArea className="h-full">
             {options.map(option => (
               <div 
                 key={option.id} 
-                className='p-4 cursor-pointer hover:bg-gray-200'
-                onClick={() => handleOptionClick(option.content)}
+                className={`p-4 mb-2 cursor-pointer rounded border ${selectedOption.id === option.id ? 'border-[#FE6A01]' : 'border-gray-300'}`}
+                onClick={() => handleOptionClick(option)}
               >
                 {option.text}
               </div>
@@ -50,12 +67,24 @@ const HomePage = () => {
           </ScrollArea>
         </div>
 
-        <div className='w-2/3 h-full p-10'>
-          <div className='h-full border rounded-md p-4'>
-            {selectedOption ? (
-              <p>{selectedOption}</p>
+        <div className='w-2/3 h-full p-6'>
+          <div className='h-full border rounded-md p-6'>
+            <div className='flex justify-between items-center mb-4'>
+              <p className='text-2xl font-semibold'>{selectedOption.text}</p>
+              <button className='text-xl text-gray-400 hover:text-black' onClick={() => setIsEditing(!isEditing)}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className='h-6 w-6'>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 12v3h3l7.536-7.536a2 2 0 00-2.828-2.828L9 12z" />
+                </svg>
+              </button>
+            </div>
+            {isEditing ? (
+              <textarea 
+                className='w-full h-64 p-2 border rounded'
+                value={selectedOption.content}
+                onChange={handleEditContent}
+              />
             ) : (
-              <p>Please select an option from the left.</p>
+              <p>{selectedOption.content}</p>
             )}
           </div>
         </div>
