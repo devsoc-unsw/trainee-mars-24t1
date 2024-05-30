@@ -6,6 +6,10 @@ module.exports = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './src/*.{ts,tsx}',
+    "./src/**/*.{html,js}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}"
   ],
   prefix: "",
   theme: {
@@ -18,6 +22,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        'orange': 'FE6A01',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
