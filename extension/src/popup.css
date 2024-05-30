@@ -16,11 +16,11 @@ html {
 .headerBlock {
     color: #fe6a01;
     font-weight: 640;
-    font-size: 22;
+    font-size: 20;
     text-align: center;
     margin-bottom: 20px;
 }
-
+/*
 .responseBlock {
     background-color: white;
     border-radius: 15px;
@@ -32,7 +32,7 @@ html {
 
 #response {
     background-color: white;
-}
+} */
 
 .button1 {
     background-color: #fe6a01;
@@ -46,7 +46,7 @@ html {
 
     padding: 5px;
     width: 10em;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     margin-bottom: 15px;
 }
 

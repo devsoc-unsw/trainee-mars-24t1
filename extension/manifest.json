@@ -7,11 +7,5 @@
         "default_popup": "src/popup.html",
         "default_icon": "src/assets/mars-square.png"
     },
-    "permissions": ["storage", "activeTab", "declarativeContent"],
-    "content_scripts": [
-        {
-            "js": ["content.js"],
-            "matches": ["https://docs.google.com/forms/*"]
-        }
-    ]
+    "permissions": ["storage", "activeTab", "declarativeContent", "scripting", "tabs"]
 }
