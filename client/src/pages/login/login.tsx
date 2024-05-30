@@ -1,12 +1,23 @@
-import '../../App.css'
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+import '../../App.css';
 
-const loginPage = () => {
-
+const LoginPage = () => {
   return (
     <div className="mars-container">
-      <p>hi</p>
+      <header className="App-header">
+        <GoogleLogin
+          onSuccess={(credentialResponse) => {
+            const decoded = jwtDecode(credentialResponse?.credential ?? "");
+            console.log(decoded);
+          }}
+          onError={() => {
+            console.log("Login failed");
+          }}
+        />
+      </header>
     </div>
   );
 }
 
-export default loginPage
+export default LoginPage;
