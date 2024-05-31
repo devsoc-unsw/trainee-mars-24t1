@@ -4,10 +4,12 @@ import "../../App.css";
 import marsImage from "../../marsWhite.png";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../context/UserContext";
 
 const LandingPage = () => {
   const [showGoogleSignIn, setShowGoogleSignIn] = useState(false);
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const handleGetStartedClick = () => {
     setShowGoogleSignIn(true);
@@ -15,8 +17,20 @@ const LandingPage = () => {
 
   const handleGoogleSuccess = (credentialResponse: CredentialResponse) => {
     try {
-      const decoded = jwtDecode(credentialResponse?.credential ?? "");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const decoded: any = jwtDecode(credentialResponse?.credential ?? "");
       console.log(decoded);
+
+      const userData = {
+        id: "",
+        email: decoded.email,
+        family_name: decoded.family_name,
+        given_name: decoded.given_name,
+        name: decoded.name,
+        picture: decoded.picture,
+      };
+
+      setUser(userData);
       navigate("/home"); // Navigate to /home after successful login
     } catch (err) {
       console.error("Error decoding JWT:", err);
