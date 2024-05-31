@@ -1,9 +1,10 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import './App.css';
-import Logo from './assets/marsWhite.png';
+import '../../App.css';
+import Logo from '../../assets/marsWhite.png';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
+import { useUser } from "../../context/UserContext";
+import { useNavigate } from 'react-router-dom';
 interface Question {
   id: number;
   text: string;
@@ -11,13 +12,14 @@ interface Question {
 }
 
 const HomePage: React.FC = () => {
+  const { user, signOut } = useUser();
   const [options, setOptions] = useState<Question[]>([]);
   const [selectedOption, setSelectedOption] = useState<Question | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
+  const history = useNavigate();
 
   useEffect(() => {
-    // Simulate fetching questions from backend
     setTimeout(() => {
       const fetchedOptions: Question[] = [
         { id: 1, text: 'Question 1', content: 'This is the content for Question 1' },
@@ -28,35 +30,65 @@ const HomePage: React.FC = () => {
     }, 1000);
   }, []);
 
+  const handleSignOut = () => {
+    signOut();
+    history('/');
+  };
   const handleOptionClick = (option: Question) => {
     setSelectedOption(option);
     setIsEditing(false);
   };
 
-  const handleAddQuestion = () => {
+  const handleAddQuestion = async () => {
     setLoading(true);
-    // Simulate adding a new question to the backend
-    setTimeout(() => {
-      const newQuestion: Question = {
-        id: options.length + 1,
-        text: `Question ${options.length + 1}`,
-        content: `This is the content for Question ${options.length + 1}`,
-      };
+    const newQuestion: Question = {
+      id: options.length + 1,
+      text: `Question ${options.length + 1}`,
+      content: `This is the content for Question ${options.length + 1}`,
+    };
+
+    // Make POST request to backend
+    try {
+      const response = await fetch('http://localhost:5005/prompt/create/v1', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user?.id, // Use the user ID from context
+          promptText: newQuestion.text,
+          answerText: newQuestion.content,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create prompt');
+      }
+
+      const data = await response.json();
+      console.log('Prompt created with ID:', data.promptId);
+
       setOptions([...options, newQuestion]);
       setSelectedOption(newQuestion);
-      // TODO:
-      // set the new question into backend
-
+    } catch (error) {
+      console.error('Error creating prompt:', error);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
+  };
+
+  const handleDeleteQuestion = (id: number) => {
+    const updatedOptions = options.filter(option => option.id !== id);
+    setOptions(updatedOptions);
+    if (selectedOption && selectedOption.id === id) {
+      setSelectedOption(null);
+    }
   };
 
   const handleEditContent = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const updatedContent = event.target.value;
     if (selectedOption) {
       setSelectedOption({ ...selectedOption, content: updatedContent });
-
-      // Simulate updating the question on the backend
       setTimeout(() => {
         setOptions(options.map(opt => opt.id === selectedOption.id ? { ...opt, content: updatedContent } : opt));
       }, 500);
@@ -76,11 +108,14 @@ const HomePage: React.FC = () => {
         </div>
 
         <div className='flex items-center gap-4'>
-          <p>Your Name</p>
+          <p>{user ? user.name : 'Your Name'}</p>
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src={user ? user.picture : 'https://github.com/shadcn.png'} />
+            <AvatarFallback>{user ? user.given_name[0] + user.family_name[0] : 'CN'}</AvatarFallback>
           </Avatar>
+          <button onClick={handleSignOut} className='text-[#FE6A01]'>
+            Sign Out
+          </button>
         </div>
       </div>
 
@@ -92,12 +127,13 @@ const HomePage: React.FC = () => {
           </div>
           <ScrollArea className="h-full">
             {options.map(option => (
-              <div 
-                key={option.id} 
+              <div
+                key={option.id}
                 className={`p-4 mb-2 cursor-pointer rounded border ${selectedOption?.id === option.id ? 'border-[#FE6A01]' : 'border-gray-300'}`}
                 onClick={() => handleOptionClick(option)}
               >
                 {option.text}
+                <button className='text-red-500 float-right' onClick={() => handleDeleteQuestion(option.id)}>Delete</button>
               </div>
             ))}
           </ScrollArea>
@@ -114,7 +150,7 @@ const HomePage: React.FC = () => {
               </button>
             </div>
             {isEditing ? (
-              <textarea 
+              <textarea
                 className='w-full h-64 p-2 border rounded'
                 value={selectedOption?.content}
                 onChange={handleEditContent}
@@ -127,6 +163,6 @@ const HomePage: React.FC = () => {
       </div>
     </main>
   );
-}
+};
 
 export default HomePage;

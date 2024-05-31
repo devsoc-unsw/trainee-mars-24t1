@@ -1,18 +1,23 @@
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import HomePage from './home.tsx';
+import HomePage from './pages/home/home.tsx';
 import LandingPage from "./pages/landing/landing.tsx";
-import LoginPage from "./pages/login/login.tsx";
+import { UserProvider } from "./context/UserContext.tsx";
+import "./App.css";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    document.title = "MARS";
+  }, []);
   return (
-    <Router>
+    <UserProvider>
+      <Router>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<HomePage />} />
       </Routes>
     </Router>
+    </UserProvider>
   );
 }
 
